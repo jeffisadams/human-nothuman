@@ -1,5 +1,6 @@
 # Ignore my data folder
 data/
+*.h5
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
