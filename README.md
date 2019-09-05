@@ -1,52 +1,69 @@
-![alt Human Not Human](https://upload.wikimedia.org/wikipedia/commons/b/b5/Rubin2.jpg "Human Not Human")
-
-[Rubin Vase](https://en.wikipedia.org/wiki/Rubin_vase)
-
-#Human Not Human
-
 ## TAGS
 - Keras
 - Convolutional Neural Net
 - Binary Classifier
+- Data Curation
 
-One of the tricks I keep coming back to as I attempt to grow my skillset within machine learning is the right level of tutorial.  Like many things in tech, it's easy to find a hello world.  It's also easy to find the code example with some subtle nuance explained for the experts.  That middle path is what I needed.  So once I got my feet on the ground, I thought I'd write one.  Similarly with Machine Learning examples.  Setting up and understanding the data usage and structure is critical to understanding how to anser problems with ML.  And while the convenience of `mnist.load_data()` is amazing!  This doesn't answer the question of how we would functionalize algorithms, or all of the effort that must go into processing the input data to get to solving a problem.
+One of the tricks I keep coming back to as I attempt to grow my skillset within machine learning is determining the right kind of problem to solve.  The amount of information on building models, and learning linear algebra is vast and thorough.  However like many things in tech, it's easy to find a hello world.  It's also easy to find the code example with some subtle nuance explained for the experts.  That middle path is what I have needed.  So once I got my feet on the ground, I thought I'd write one.  My focus is on the minutia of working with the data, and how to pick a problem that's simple enough to solve from the ground floor.
 
-So I chose to start from the ground up.  My data, my curation.  Hello world examples of the image classification Convolutional Neural Net.  The goal is to understand the pipeline and processing from raw images to a working productionalized classifier.
+![alt Human Not Human](https://upload.wikimedia.org/wikipedia/commons/b/b5/Rubin2.jpg "Human Not Human")
+
+[Rubin Vase](https://en.wikipedia.org/wiki/Rubin_vase)
+
+# Human Not Human - Neural Networks for Mortals
+For specificity, we are building a binary classification Neural Net from a dataset of annotated images in a csv to determine if a human is present in the image.
 
 ## The data
-I wanted something that was pretty easy to classify.  Something I could generate the dataset for.  And lastly something that I would find moderately useful.  As it happens, I recently installed a fixed position camera to a Raspberry Pi over my porch.  I figure this is a good source of relatively homogeneous images.  And bonus that I could make the motion library event script stop texting me every time a cat runs by (which happens so very often).
+As it happens, I recently installed a fixed position camera to a Raspberry Pi over my porch.  I wrote some code to text me when a motion event triggers.  And then came a text every 20 minutes with a picture of a cat on it.  Seriously, my neighborhood is overrun with cats!  Understanding the data usage and structure is critical to understanding how to answer problems with ML.  The information available on machine learning often doesn't answer the question of the effort that must go into processing the input data to get to solving a problem.  In my own learning path, I have constantly felt I am starting from less than zero because getting to the point of writing the model is so time intensive.  The global solution to the complexities of data curation within Data Science at large is to be very prescriptive in model input structures.  This is an appropriate solution, however, it hides the unfortunate fact about data science. The majority of data science is being a digital librarian and plumber.
 
-**Note -- I have not included the dataset I used in the repo since it contains pictures of my family and my house.  I would be willing to share it with others, but want to do so by request only.
+**Note -- I have not included the dataset I used in the repo since it contains pictures of my family.  I would be willing to share it with others, but choose to do so by request only.
 
 ### Processing the data -- The hard work
-The bulk of this exercise was me doing data entry.  There are cooler ways to pre-train or to do unsupervised learning, but the existing datasets tend to hide how much work went into curating them.  And to solve problems customized to a specific dataset requires usage of that specific dataset which often 
+The bulk of this exercise was me doing data entry.  There are cooler ways to pre-train or to do unsupervised learning, but the existing datasets tend to hide how much work went into curating them.  The convenience of `mnist.load_data()` is amazing!  However to solve problems customized to a specific dataset requires usage of that specific dataset.  This was exactly as boring as you think it was.  Additionally, I counted people, and counted cars so I can try a few other models on this dataset in the future.  I started counting cats as well, but there were too many so I stopped (not a joke).
 
-### Building training and validation datasets
-The raw data is just a csv with an image path and a few columns of classified data.  I counted cars and humans for future use.  In order to input model for training and validation, I first created the input vectors and the output classifications as a list.  Then I used the sklearn train_test_split to randomly generate cohorts for train and validation data.
+### Building training validation and test datasets
+The critical takeaway I keep coming back to is that the data for any neural network is a matrix or array of tensors.  Or any way you want to describe a structured collection of numeric values we are going to backpropagate against.  It's easy to get tied into the examples demanding a specific directory structure or a specific input encoding, but as long as you end up with matrices, then you'll be ok.  There are good reasons to follow standards, and using baked systems for training like Sagemaker will demand a specific input structure, but I would actually recommend doing an exercise of conversion from a starting point that isn't:
+```
+| data
+    | train
+    | test
+```
+
+In my case, the raw data is just a csv with an image path and a few columns of classified data.  In order to input model for training validation and test, I first created the input matrix and the output vector list.
 
 ```python
-dataset = np.ndarray(shape=(len(data), image_height, image_width, channels), dtype=np.float32)
+dataset = np.ndarray(shape=(len(data), target_height, target_width, channels), dtype=np.float32)
 y_dataset = []
 i=0
 
 # Set of markers so I can create an lst
-files = []
 for index, row in data.iterrows():
     y_dataset.append(row.human)
-    img = load_img(basePath + '/' + row.filename)
-    files.append('rawdata/' + row.filename)
+    img = load_img(basePath + '/' + row.filename, target_size=(target_height, target_width))
     x = img_to_array(img)
     x = x / 255.0
     dataset[i] = x
     i += 1
+```
 
-x_train, x_val, y_train, y_val = train_test_split(dataset, y_dataset, test_size=0.2)
+Then I used the sklearn train_test_split to randomly generate cohorts for train and validation data.  Lastly I split the validation in half for validation and test.
+
+```python
+x_train, x_val_test, y_train, y_val_test = train_test_split(dataset, y_dataset, test_size=0.4)
+
+validation_length = int(len(x_val))
+# Separate validation from test
+x_val = x_val_test[:validation_length]
+y_val = y_val_test[:validation_length]
+
+x_test = x_val_test[validation_length:]
+y_test = y_val_test[validation_length:]
+
+x_train.shape
 ```
 
 ## The model
-// TODO: Rewrite this section
-
-I should be very clear that I did not develop this model.  I followed a few 'hello world' binary classification tutorials until the input and output shapes matched.  I can follow the linear algebra at play to create a model like this, but I cannot yet create one on my own.  I'll include some links below for some cool primers on convolutions, and I highly recommend the [Cholet's book](https://www.manning.com/books/deep-learning-with-python) for a primer on gradient descent and the chain rule.
+The model is the `hello world` binary classification model with a few added tweaks that seemed like a good idea at the time.  I can follow the model structure and understand the underpinning math behind it, but there's a world of difference between following along vs playing jazz.I highly recommend the [Cholet's book](https://www.manning.com/books/deep-learning-with-python) for a primer on gradient descent and the chain rule that underpins what's happening in the model.  I also resized the images so the memory footprint is lowered.  This dropped training time by an order of magnitude.
 
 ```python
 model = Sequential()
@@ -75,24 +92,33 @@ model.compile(loss='binary_crossentropy',
 
 
 ### Why this model works relatively well
-Data science purists will likely notice this is not generalized as a classifier for humans.
+Data science purists will likely notice this is not generalized as a classifier for humans.  My colleague suggested we try his front door cam, and I suspect it will perform poorly.  But the important takeaway is that it solves an actual problem for this specific use case, and it really didn't take me that long, or that much data to get here.  Purists will chide me related to overfitting or other data integrity / bias mistakes, but now that I can successfully remove the cat text messages, I remain enthused.
 
 ## Training
-The first time I ran this, I trained on my laptop.  It took multiple hours, and I learned researching in the background that there are GPU accelerated notebooks for use for free from kaggle.  The second time it took only `TODO://`____ minutes.  I cannot stress enough that you should use a GPU accelerated instance where possible.
+The first time I ran this, I trained on my laptop.  This took about 4 hours for 4 epochs.  So I started looking into Sagemaker and Kaggle. Both offer an amazing service, and both have drawbacks.  Kaggle is somewhat limited in how you can load your own data.  And Sagemaker gives notebooks that are powerful yet expensive, and getting your data to these mediums is where the complexity lies.  I have the local notebook along with the version I used in Sagemaker.  My advice remains consistent with what I have found related to AWS... If you're going to that party, you had better drink all the koolaide.  If you are trying to take a half step into the world of AWS, you will encounter every edge case that they lock down.  I didn't take my own advice in this case and ended up uploading my data to S3 and pulling it into a Jupyter notebook on Sagemaker.  The training speed was pretty tolerable, and the network didn't seem to hurt too much in terms of time spent.  There are more prescribed ways to create training jobs in Sagemaker, but that's for another day.  Kaggle would have worked if I had been smarter in my data construction and not required to load the whole dataset into ram as a list.  But things to know for the future.  There's always something new to learn.
 
 ```python
 batch_size=16
-epochs=4
+epochs=10
 
 model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=1, validation_data=(x_val,y_val))
 model.save('current_full.h5')
 ```
 
+I trained on 797 images for the second passes.  171 validation images, and 171 test images.  These cohorts were chosen randomly.
+
 ## Model evaluation
-I ran an additional set of images as test images through the output to see how well the classifier worked.
+I used the test data that I set aside to do evaluation.  Here are the top level results.
+- loss: 0.5187677096205148
+- acc: 0.877192983850401
+I'm honestly still getting a feel for how to interperet results, but I got to the point of being anecdotally satisfied with the results by writing a bulk process script.  This script copies the files in a directory into a path classified set of images according to a set threshold.  This was a good way to gut check how the problem could be used in the future.
+
+```Python
+
+```
 
 ## Going to production
-Once I had the model trained.  It is pretty trivial to save and load using Keras.  The model is not a small file, but it allows for a simple python script to take in an url argument to an image, run the binary classification model on it and return the probability it is a human.  Here is the full operational classifier script.
+Once I had the model trained.  It is pretty trivial to save and load using Keras.  I created two `production` scripts.  One that I can pass a url and get a prediction.  The second iterates a directory and copies them into a sorted directory structure.  Here is the full operational classifier script.
 
 ```python
 #!/usr/bin/env python
@@ -126,7 +152,10 @@ print(result[0][0])
 
 I still have to attach this to the camera so for now I'm still getting cat notifications on my phone.  But I constantly am running `python guess.py http://...` with enthusiasm for the ground up solution.
 
+![alt Human Not Human](./assets/cats.jpg "CATS!")
+
 ## Links
 - [Deep Learning with Python](https://www.manning.com/books/deep-learning-with-python)
     - I cannot recommend this book enough.
 - [Image Kernel Visualization](http://setosa.io/ev/image-kernels/)
+- [Everything you should know about data management](https://towardsdatascience.com/everything-a-data-scientist-should-know-about-data-management-6877788c6a42)
