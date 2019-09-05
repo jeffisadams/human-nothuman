@@ -8,7 +8,7 @@ from urllib.request import urlopen
 
 import numpy as np
 
-model = load_model('full.h5')
+model = load_model('../models/human_not_human.h5')
 
 url = sys.argv[1]
 print(url)
