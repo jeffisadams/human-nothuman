@@ -1,4 +1,5 @@
 ## TAGS
+- Image classification
 - Keras
 - Convolutional Neural Net
 - Binary Classifier
@@ -10,8 +11,7 @@ One of the tricks I keep coming back to as I attempt to grow my skillset within 
 
 [Rubin Vase](https://en.wikipedia.org/wiki/Rubin_vase)
 
-# Human Not Human - Neural Networks for Mortals
-For specificity, we are building a binary classification Neural Net from a dataset of annotated images in a csv to determine if a human is present in the image.
+# Human Not Human - Binary Classification for Mortals
 
 ## The data
 As it happens, I recently installed a fixed position camera to a Raspberry Pi over my porch.  I wrote some code to text me when a motion event triggers.  And then came a text every 20 minutes with a picture of a cat on it.  Seriously, my neighborhood is overrun with cats!  Understanding the data usage and structure is critical to understanding how to answer problems with ML.  The information available on machine learning often doesn't answer the question of the effort that must go into processing the input data to get to solving a problem.  In my own learning path, I have constantly felt I am starting from less than zero because getting to the point of writing the model is so time intensive.  The global solution to the complexities of data curation within Data Science at large is to be very prescriptive in model input structures.  This is an appropriate solution, however, it hides the unfortunate fact about data science. The majority of data science is being a digital librarian and plumber.
@@ -111,10 +111,63 @@ I trained on 797 images for the second passes.  171 validation images, and 171 t
 I used the test data that I set aside to do evaluation.  Here are the top level results.
 - loss: 0.5187677096205148
 - acc: 0.877192983850401
-I'm honestly still getting a feel for how to interperet results, but I got to the point of being anecdotally satisfied with the results by writing a bulk process script.  This script copies the files in a directory into a path classified set of images according to a set threshold.  This was a good way to gut check how the problem could be used in the future.
+I'm honestly still getting a feel for how to interperet results, but I got to the point of being anecdotally satisfied with the results by writing a bulk process script.  This script copies the files in a directory into a path classified set of images according to a set threshold (80% probability of human).  This was a good way to gut check how the problem could be used in the future.
 
 ```Python
+#!/usr/bin/env python
+# coding: utf-8
 
+from keras.models import load_model
+from keras.preprocessing.image import img_to_array, load_img
+
+import os
+from shutil import copyfile, rmtree
+import sys
+
+import numpy as np
+
+
+def isHuman(filepath):
+    img = load_img(filepath, target_size=(target_height, target_width))
+    x = img_to_array(img)
+    x = x / 255.0
+
+    size = img.size
+
+    dataset = np.ndarray(shape=(1, size[1], size[0], channels),dtype=np.float32)
+    dataset[0] = x
+    result = model.predict(dataset)
+    return result[0][0]
+
+# load the model
+model = load_model('../models/human_not_human.h5')
+
+# Base values
+target_height = 180
+target_width = 320
+channels = 3
+
+accept_threshold = 0.8
+
+path = sys.argv[1]
+print(path)
+
+if not os.path.exists(path):
+    raise Exception('`{}` does not exist or is not a directory'.format(path))
+
+
+# Initialize the directory and ensure it's only our current version
+dstPath = './data/tested/'
+if os.path.exists(dstPath):
+    rmtree(dstPath)
+os.makedirs(dstPath)
+os.makedirs(os.path.join(dstPath, '0'))
+os.makedirs(os.path.join(dstPath, '1'))
+for f in os.listdir(path):
+    if f.endswith('.jpg'):
+        filepath = os.path.join(path, f)
+        human = '1' if isHuman(filepath) > accept_threshold else '0'
+        copyfile(filepath, os.path.join(dstPath, human, f))
 ```
 
 ## Going to production
