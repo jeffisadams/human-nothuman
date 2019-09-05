@@ -1,19 +1,13 @@
-## TAGS
-- Image classification
-- Keras
-- Convolutional Neural Net
-- Binary Classifier
-- Data Curation
+# Human Not Human
 
-One of the tricks I keep coming back to as I attempt to grow my skillset within machine learning is determining the right kind of problem to solve.  The amount of information on building models, and learning linear algebra is vast and thorough.  However like many things in tech, it's easy to find a hello world.  It's also easy to find the code example with some subtle nuance explained for the experts.  That middle path is what I have needed.  So once I got my feet on the ground, I thought I'd write one.  My focus is on the minutia of working with the data, and how to pick a problem that's simple enough to solve from the ground floor.
+One of the tricks I keep coming back to as I attempt to grow my skillset within machine learning is determining the right kind of problem to solve.  The amount of information on building models, and learning linear algebra is vast and thorough.  However like many things in tech, it's easy to find a hello world.  It's also easy to find the code example with some subtle nuance explained for the experts.  I needed a middle path.  So as I'm getting my feet on the ground, I thought I'd write a binary classification post for mortals.  My focus is on the minutia of working with the data, and how to pick a problem that's simple enough to solve from the ground floor.
 
 ![alt Human Not Human](https://upload.wikimedia.org/wikipedia/commons/b/b5/Rubin2.jpg "Human Not Human")
 
 [Rubin Vase](https://en.wikipedia.org/wiki/Rubin_vase)
 
-# Human Not Human - Binary Classification for Mortals
+# Binary Classification for Mortals
 
-## The data
 As it happens, I recently installed a fixed position camera to a Raspberry Pi over my porch.  I wrote some code to text me when a motion event triggers.  And then came a text every 20 minutes with a picture of a cat on it.  Seriously, my neighborhood is overrun with cats!  Understanding the data usage and structure is critical to understanding how to answer problems with ML.  The information available on machine learning often doesn't answer the question of the effort that must go into processing the input data to get to solving a problem.  In my own learning path, I have constantly felt I am starting from less than zero because getting to the point of writing the model is so time intensive.  The global solution to the complexities of data curation within Data Science at large is to be very prescriptive in model input structures.  This is an appropriate solution, however, it hides the unfortunate fact about data science. The majority of data science is being a digital librarian and plumber.
 
 **Note -- I have not included the dataset I used in the repo since it contains pictures of my family.  I would be willing to share it with others, but choose to do so by request only.
@@ -111,7 +105,7 @@ I trained on 797 images for the second passes.  171 validation images, and 171 t
 I used the test data that I set aside to do evaluation.  Here are the top level results.
 - loss: 0.5187677096205148
 - acc: 0.877192983850401
-I'm honestly still getting a feel for how to interperet results, but I got to the point of being anecdotally satisfied with the results by writing a bulk process script.  This script copies the files in a directory into a path classified set of images according to a set threshold (80% probability of human).  This was a good way to gut check how the problem could be used in the future.
+I'm honestly still getting a feel for how to interpret results, but I got to the point of being anecdotally satisfied with the results by writing a bulk process script.  This script copies the files in a directory into a path classified set of images according to a set threshold (80% probability of human).  This was a good way to gut check how the problem could be used in the future.
 
 ```Python
 #!/usr/bin/env python
