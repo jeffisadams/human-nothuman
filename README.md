@@ -94,7 +94,7 @@ Data science purists will likely notice this is not generalized as a classifier 
 
 Purists will chide me related to overfitting or other data integrity / bias mistakes, but now that I can successfully remove the cat text messages, I remain enthused.
 
-## Training
+## Training and how to swim without a GPU
 The first time I ran this, I trained on my laptop.  This took about 4 hours for 4 epochs.  So I started looking into Sagemaker and Kaggle. Both offer an amazing service, and both have drawbacks.  Kaggle is somewhat limited in how you can load your own data.  And Sagemaker gives notebooks that are powerful yet expensive, and getting your data to these mediums is where the complexity lies.  I have the local notebook along with the version I used in Sagemaker.
 
 My advice remains consistent with what I have found related to AWS... If you're going to that party, you had better drink all the koolaide.  If you are trying to take a half step into the world of AWS, you will encounter every edge case that they lock down.  I didn't take my own advice in this case and ended up uploading my data to S3 and pulling it into a Jupyter notebook on Sagemaker.
