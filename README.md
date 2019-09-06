@@ -61,7 +61,7 @@ x_train.shape
 ```
 
 ## The model
-The model is the `hello world` binary classification model with a few added tweaks that seemed like a good idea at the time.  I can follow the model structure and understand the underpinning math behind it, but there's a world of difference between following along vs playing jazz.I highly recommend the [Cholet's book](https://www.manning.com/books/deep-learning-with-python) for a primer on gradient descent and the chain rule that underpins what's happening in the model.  I also resized the images so the memory footprint is lowered.  This dropped training time by an order of magnitude.
+The model is the `hello world` binary classification model with a few added tweaks that seemed like a good idea at the time.  I can follow the model structure and understand the underpinning math behind it, but there's a world of difference between following along vs playing jazz.  I highly recommend the [Cholet's book](https://www.manning.com/books/deep-learning-with-python) for a primer on gradient descent and the chain rule that underpins what's happening in the model.  I also resized the images so the memory footprint is lowered.  This dropped training time by an order of magnitude.
 
 ```python
 model = Sequential()
@@ -90,10 +90,16 @@ model.compile(loss='binary_crossentropy',
 
 
 ## Why this model works relatively well
-Data science purists will likely notice this is not generalized as a classifier for humans.  My colleague suggested we try his front door cam, and I suspect it will perform poorly.  But the important takeaway is that it solves an actual problem for this specific use case, and it really didn't take me that long, or that much data to get here.  Purists will chide me related to overfitting or other data integrity / bias mistakes, but now that I can successfully remove the cat text messages, I remain enthused.
+Data science purists will likely notice this is not generalized as a classifier for humans.  My colleague suggested we try his front door cam, and I suspect it will perform poorly.  But the important takeaway is that it solves an actual problem for this specific use case, and it really didn't take me that long, or that much data to get here.
+
+Purists will chide me related to overfitting or other data integrity / bias mistakes, but now that I can successfully remove the cat text messages, I remain enthused.
 
 ## Training
-The first time I ran this, I trained on my laptop.  This took about 4 hours for 4 epochs.  So I started looking into Sagemaker and Kaggle. Both offer an amazing service, and both have drawbacks.  Kaggle is somewhat limited in how you can load your own data.  And Sagemaker gives notebooks that are powerful yet expensive, and getting your data to these mediums is where the complexity lies.  I have the local notebook along with the version I used in Sagemaker.  My advice remains consistent with what I have found related to AWS... If you're going to that party, you had better drink all the koolaide.  If you are trying to take a half step into the world of AWS, you will encounter every edge case that they lock down.  I didn't take my own advice in this case and ended up uploading my data to S3 and pulling it into a Jupyter notebook on Sagemaker.  The training speed was pretty tolerable, and the network didn't seem to hurt too much in terms of time spent.  There are more prescribed ways to create training jobs in Sagemaker, but that's for another day.  Kaggle would have worked if I had been smarter in my data construction and not required to load the whole dataset into ram as a list.  But things to know for the future.  There's always something new to learn.
+The first time I ran this, I trained on my laptop.  This took about 4 hours for 4 epochs.  So I started looking into Sagemaker and Kaggle. Both offer an amazing service, and both have drawbacks.  Kaggle is somewhat limited in how you can load your own data.  And Sagemaker gives notebooks that are powerful yet expensive, and getting your data to these mediums is where the complexity lies.  I have the local notebook along with the version I used in Sagemaker.
+
+My advice remains consistent with what I have found related to AWS... If you're going to that party, you had better drink all the koolaide.  If you are trying to take a half step into the world of AWS, you will encounter every edge case that they lock down.  I didn't take my own advice in this case and ended up uploading my data to S3 and pulling it into a Jupyter notebook on Sagemaker.
+
+The training speed was pretty tolerable, and the network didn't seem to hurt too much in terms of time spent.  There are more prescribed ways to create training jobs in Sagemaker, but that's for another day.  Kaggle would have worked if I had been smarter in my data construction and not required to load the whole dataset into ram as a list.  But things to know for the future.  There's always something new to learn.
 
 ```python
 batch_size=16
