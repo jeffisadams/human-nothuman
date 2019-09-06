@@ -14,8 +14,6 @@ Understanding the data usage and structure is critical to understanding how to a
 
 In my own learning path, I have constantly felt I am starting from less than zero because getting to the point of writing the model is so time intensive.  The global solution to the complexities of data curation within Data Science at large is to be very prescriptive in model input structures.  This is an appropriate solution, however, it hides the unfortunate fact about data science. The majority of data science is being a digital librarian and plumber.
 
-**Note -- I have not included the dataset I used in the repo since it contains pictures of my family.  I would be willing to share it with others, but choose to do so by request only.
-
 ## Processing the data -- The hard work
 The bulk of this exercise was data entry.  There are cooler ways to pre-train or to do unsupervised learning, but the existing datasets tend to hide how much work went into curating them.  The convenience of `mnist.load_data()` is amazing!  However to solve problems customized to a specific dataset requires usage of that specific dataset.  This was exactly as boring as you think it was.  Additionally, I counted people, and counted cars so I can try a few other models on this dataset in the future.  I started counting cats as well, but there were too many so I stopped (not a joke).
 
@@ -211,7 +209,7 @@ print(result[0][0])
 
 I still have to attach this to the camera so for now I'm still getting cat notifications on my phone.  But I constantly am running `python guess.py http://...` with enthusiasm for the ground up solution.
 
-![alt Human Not Human](./assets/cats.jpg "CATS!")
+![alt Human Not Human](./assets/cat.jpg "CATS!")
 
 ## Links
 - [Deep Learning with Python](https://www.manning.com/books/deep-learning-with-python)
