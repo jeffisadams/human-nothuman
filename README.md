@@ -1,6 +1,6 @@
 # Human Not Human
 
-One of the tricks I keep coming back to as I attempt to grow my skillset within machine learning is determining the right kind of problem to solve.  The amount of information on building models, and learning linear algebra is vast and thorough.  However like many things in tech, it's easy to find a hello world.  It's also easy to find the code example with some subtle nuance explained for the experts.  I needed a middle path.  So as I'm getting my feet on the ground, I thought I'd write a binary classification post for mortals.  My focus is on the minutia of working with the data, and how to pick a problem that's simple enough to solve from the ground floor.
+So as I'm getting my feet on the ground, I thought I'd write a binary classification post for mortals.  My focus is on the minutia of working with the data, and how to pick a problem that's simple enough to solve from the ground floor.
 
 ![alt Human Not Human](https://upload.wikimedia.org/wikipedia/commons/b/b5/Rubin2.jpg "Human Not Human")
 
@@ -8,14 +8,18 @@ One of the tricks I keep coming back to as I attempt to grow my skillset within 
 
 # Binary Classification for Mortals
 
-As it happens, I recently installed a fixed position camera to a Raspberry Pi over my porch.  I wrote some code to text me when a motion event triggers.  And then came a text every 20 minutes with a picture of a cat on it.  Seriously, my neighborhood is overrun with cats!  Understanding the data usage and structure is critical to understanding how to answer problems with ML.  The information available on machine learning often doesn't answer the question of the effort that must go into processing the input data to get to solving a problem.  In my own learning path, I have constantly felt I am starting from less than zero because getting to the point of writing the model is so time intensive.  The global solution to the complexities of data curation within Data Science at large is to be very prescriptive in model input structures.  This is an appropriate solution, however, it hides the unfortunate fact about data science. The majority of data science is being a digital librarian and plumber.
+As it happens, I recently installed a fixed position camera to a Raspberry Pi over my porch.  I wrote some code to text me when a motion event triggers.  And then came a text every 20 minutes with a picture of a cat on it.  Seriously, my neighborhood is overrun with cats!
+
+Understanding the data usage and structure is critical to understanding how to answer problems with ML.  The information available on machine learning often doesn't answer the question of the effort that must go into processing the input data to get to solving a problem.
+
+In my own learning path, I have constantly felt I am starting from less than zero because getting to the point of writing the model is so time intensive.  The global solution to the complexities of data curation within Data Science at large is to be very prescriptive in model input structures.  This is an appropriate solution, however, it hides the unfortunate fact about data science. The majority of data science is being a digital librarian and plumber.
 
 **Note -- I have not included the dataset I used in the repo since it contains pictures of my family.  I would be willing to share it with others, but choose to do so by request only.
 
-### Processing the data -- The hard work
-The bulk of this exercise was me doing data entry.  There are cooler ways to pre-train or to do unsupervised learning, but the existing datasets tend to hide how much work went into curating them.  The convenience of `mnist.load_data()` is amazing!  However to solve problems customized to a specific dataset requires usage of that specific dataset.  This was exactly as boring as you think it was.  Additionally, I counted people, and counted cars so I can try a few other models on this dataset in the future.  I started counting cats as well, but there were too many so I stopped (not a joke).
+## Processing the data -- The hard work
+The bulk of this exercise was data entry.  There are cooler ways to pre-train or to do unsupervised learning, but the existing datasets tend to hide how much work went into curating them.  The convenience of `mnist.load_data()` is amazing!  However to solve problems customized to a specific dataset requires usage of that specific dataset.  This was exactly as boring as you think it was.  Additionally, I counted people, and counted cars so I can try a few other models on this dataset in the future.  I started counting cats as well, but there were too many so I stopped (not a joke).
 
-### Building training validation and test datasets
+## Building training validation and test datasets
 The critical takeaway I keep coming back to is that the data for any neural network is a matrix or array of tensors.  Or any way you want to describe a structured collection of numeric values we are going to backpropagate against.  It's easy to get tied into the examples demanding a specific directory structure or a specific input encoding, but as long as you end up with matrices, then you'll be ok.  There are good reasons to follow standards, and using baked systems for training like Sagemaker will demand a specific input structure, but I would actually recommend doing an exercise of conversion from a starting point that isn't:
 ```
 | data
@@ -85,7 +89,7 @@ model.compile(loss='binary_crossentropy',
 ```
 
 
-### Why this model works relatively well
+## Why this model works relatively well
 Data science purists will likely notice this is not generalized as a classifier for humans.  My colleague suggested we try his front door cam, and I suspect it will perform poorly.  But the important takeaway is that it solves an actual problem for this specific use case, and it really didn't take me that long, or that much data to get here.  Purists will chide me related to overfitting or other data integrity / bias mistakes, but now that I can successfully remove the cat text messages, I remain enthused.
 
 ## Training
@@ -206,3 +210,4 @@ I still have to attach this to the camera so for now I'm still getting cat notif
     - I cannot recommend this book enough.
 - [Image Kernel Visualization](http://setosa.io/ev/image-kernels/)
 - [Everything you should know about data management](https://towardsdatascience.com/everything-a-data-scientist-should-know-about-data-management-6877788c6a42)
+= [Convolutional Neural Nets](https://towardsdatascience.com/a-comprehensive-guide-to-convolutional-neural-networks-the-eli5-way-3bd2b1164a53)
