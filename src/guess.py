@@ -8,12 +8,17 @@ from urllib.request import urlopen
 
 import numpy as np
 
+# Base values
+target_height = 180
+target_width = 320
+channels = 3
+
 model = load_model('../models/human_not_human.h5')
 
 url = sys.argv[1]
 print(url)
 
-img = load_img(urlopen(url))
+img = load_img(urlopen(url), target_size=(target_height, target_width))
 x = img_to_array(img)
 x = x / 255.0
 
