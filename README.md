@@ -117,7 +117,7 @@ I used the test data that I set aside to do evaluation.  Here are the top level 
 
 I'm honestly still getting a feel for how to interpret results, but I got to the point of being anecdotally satisfied with the results by writing a bulk process script.  This script copies the files in a directory into a path classified set of images according to a set threshold (80% probability of human).  This was a good way to gut check how the problem could be used in the future.
 
-```Python
+```python
 #!/usr/bin/env python
 # coding: utf-8
 
